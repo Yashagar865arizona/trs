@@ -1,0 +1,14 @@
+openai==0.28.1
+
+requests~=2.31.0
+setuptools~=68.2.0
+numpy~=1.24.4
+opencv-python~=4.8.1.78
+mss~=9.0.1
+elevenlabs~=0.2.26
+soundfile~=0.12.1
+sounddevice~=0.4.6
+PyAudio~=0.2.14
+websocket~=0.2.1
+pygame~=2.5.2
+pyscreenshot~=3.1
