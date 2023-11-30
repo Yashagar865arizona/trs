@@ -394,12 +394,12 @@ class LTM:
         combined_text = user_text + " " + ai_text
         self.add_embedding_to_index(combined_text)
 
-    def save_to_disk(self):
+    def save_to_disk(self, index_file, mapping_file):
         try:
-            faiss.write_index(self.index, self.index_file)
-            with open(self.mapping_file, 'wb') as f:
+            faiss.write_index(self.index, index_file)
+            with open(mapping_file, 'wb') as f:
                 pickle.dump(self.index_to_text, f)
-            print(f"LTM data saved to {self.index_file} and {self.mapping_file}.")
+            print(f"LTM data saved to {index_file} and {mapping_file}.")
         except Exception as e:
             print(f"Error saving LTM data: {e}")
 

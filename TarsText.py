@@ -37,6 +37,11 @@ class TarsTextHandler:
         # Process and store the text in the LTM class
         self.ltm.store_dialogue_turn(message_body, "")
         # Additional AI-based processing and response generation
+        response = client.chat.completions.create(model="gpt-3.5-turbo",
+        messages=message_body,
+        temperature=1,
+        max_tokens=200,
+        stop=["User:", "USER:", f"{caller_name}:"])
 
     def update_conversation_file(self, phone_number, message):
         """
@@ -64,7 +69,9 @@ class TarsTextHandler:
 
 import faiss
 import numpy as np
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 import os
 import pickle
 from flask import Flask, request
@@ -72,12 +79,12 @@ from flask import Flask, request
 
 
 
-api_key = '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'  
+api_key = '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'  
 ltm = LTM(api_key=api_key)
 
 
-twilio_account_sid = 'SK9981340905e59767b1a479726d299ddd'
-twilio_auth_token = 'zIvtJV7nPVKcz6CJVVEk9dfF9J9KNncM'  
+twilio_account_sid = 'AC7e64afea019cf2e9706eea56aab5d143'
+twilio_auth_token = '329b467c3fa35ac96981ad6b18ffddf7'  
 phone_number = '8557520721'  
 tars_handler = TarsTextHandler(
     twilio_account_sid=twilio_account_sid,
@@ -93,19 +100,23 @@ app = Flask(__name__)
 
 @app.route("/sms_webhook", methods=['GET', 'POST'])
 def sms_webhook():
-    from_number = request.values.get('From', None)
-    message_body = request.values.get('Body', None)
+    if request.method == "POST":
+        from_number = request.values.get('From', None)
+        message_body = request.values.get('Body', None)
 
-    
-    
-    caller_name = "User"  # Replace with actual caller name
+        
+        
+        caller_name = "User"  # Replace with actual caller name
 
-    
-    
-    tars_handler.handle_incoming_text(from_number, message_body, caller_name)
-    print(from_number, message_body)
+        
+        
+        tars_handler.handle_incoming_text(from_number, message_body, caller_name)
+        print(from_number, message_body)
+        tars_handler.send_text(to_number=from_number, message="MESSSAGE RECEIVED")
 
-    return "SMS Received", 200
+        return "SMS Received", 200
+    else:
+        return "Please POST", 200
 
 @app.route("/", methods=["GET"])
 def index(): # Goes under flask
